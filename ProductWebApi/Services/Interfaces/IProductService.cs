@@ -6,7 +6,7 @@ namespace ProductWebApi.Services.Interfaces
     {
         Task<AmcartResponse<Product>> GetProduct(int productId);
 
-        Task<AmcartResponse<List<ProductSKU>>> GetProductSKUs(int productId);
+        Task<AmcartResponse<ProductSKU>> GetProductSKUs(int productId);
 
     }
 }

@@ -1,26 +1,40 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Azure.Cosmos;
+using Microsoft.Extensions.Options;
 using ProductWebApi.Cosmos;
 using ProductWebApi.Models;
 using ProductWebApi.Services.Interfaces;
 
 namespace ProductWebApi.Services
 {
-    public class ProductService(ILogger<ProductService> logger, CosmosService cosmosService) : IProductService
+    public class ProductService(ILogger<ProductService> logger, DataAccessClient dataAccessClient, IOptions<DataAccessClientSettings> options) : IProductService
     {
         private readonly ILogger<ProductService> _logger = logger;
-        private readonly CosmosService _cosmosService  = cosmosService;
+        private readonly DataAccessClient _dataAccessClient = dataAccessClient;
+        private readonly DataAccessClientSettings _dataAccessClientSettings = options.Value;
 
-        async Task<AmcartResponse<List<ProductSKU>>> IProductService.GetProductSKUs(int productId)
+        async Task<AmcartResponse<ProductSKU>> IProductService.GetProductSKUs(int productId)
         {
             try
             {
-                var results = await _cosmosService.container.ReadItemAsync<ProductSKU>("productId", new Microsoft.Azure.Cosmos.PartitionKey());
-                return new AmcartResponse<List<ProductSKU>>();
+                var amcartResponse = new AmcartResponse<ProductSKU>() { Status = AmcartRequestStatus.BadRequest };
+                var results = await _dataAccessClient
+                                    .Client
+                                     .GetDatabase(_dataAccessClientSettings.DatabaseName).
+                                      GetContainer(_dataAccessClientSettings.SkuContainerName)
+                                      .ReadItemAsync<ProductSKU>("productId", new PartitionKey());
+
+                if (results.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    amcartResponse.Content = results.Resource;
+                    amcartResponse.Status = AmcartRequestStatus.Success;
+                }
+
+                return amcartResponse;
             }
             catch (Exception ex)
             {
                 _logger.LogError("{Message}", ex.Message);
-                return new AmcartResponse<List<ProductSKU>> { Status = AmcartRequestStatus.InternalServerError };
+                return new AmcartResponse<ProductSKU> { Status = AmcartRequestStatus.InternalServerError };
             }
         }
 
@@ -28,13 +42,29 @@ namespace ProductWebApi.Services
         {
             try
             {
-              var results =  await _cosmosService.container.ReadItemAsync<ProductSKU>("productId", new Microsoft.Azure.Cosmos.PartitionKey());
+                var amcartResponse = new AmcartResponse<Product>() { Status = AmcartRequestStatus.BadRequest };
 
-                if(results.StatusCode == System.Net.HttpStatusCode.OK) 
+                if(productId <= 0)
                 {
-
+                    amcartResponse.Status = AmcartRequestStatus.NotFound;
+                    return amcartResponse;
                 }
-                return new AmcartResponse<Product>()    ;
+
+                var results = await _dataAccessClient
+                                   .Client
+                                    .GetDatabase(_dataAccessClientSettings.DatabaseName).
+                                     GetContainer(_dataAccessClientSettings.ProductContainerName)
+                                    .ReadItemAsync<Product>(productId.ToString(), new PartitionKey(productId.ToString()));
+
+                amcartResponse.Status = results.StatusCode == System.Net.HttpStatusCode.NotFound ? AmcartRequestStatus.NotFound : AmcartRequestStatus.BadRequest;
+
+                if (results.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    amcartResponse.Content = results.Resource;
+                    amcartResponse.Status = AmcartRequestStatus.Success;
+                }
+
+                return amcartResponse;
             }
             catch (Exception ex)
             {

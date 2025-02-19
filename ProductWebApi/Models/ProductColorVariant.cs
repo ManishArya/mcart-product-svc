@@ -8,6 +8,6 @@
 
         public required string ColorName { get; set; }
 
-        public required string ColorCode { get; set;
+        public required string ColorCode { get; set; }
     }
 }

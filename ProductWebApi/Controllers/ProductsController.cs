@@ -17,12 +17,5 @@ namespace ProductWebApi.Controllers
             var results = await _productService.GetProduct(productId);
             return StatusCode((int)results.Status, results);
         }
-
-        [HttpGet("GetProductSKUs")]
-        public async Task<IActionResult> GetProductSKUs(int productId)
-        {
-            var results = await _productService.GetProductSKUs(productId);
-            return StatusCode((int)results.Status, results);
-        }
     }
 }

@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
 
-        public required string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         public required string Name { get; set; }
 
@@ -20,6 +20,8 @@
 
         public required List<string> Category { get; set; }
 
+        public required string ProductCategory { get; set; }
+
         public required string Brand { get; set; }
 
         public required List<ProductImage> Images { get; set; }
@@ -30,7 +32,7 @@
 
         public required string Sku { get; set; }
 
-        public required List<string> Sizes { get; set; }
+        public required List<Sku> Sizes { get; set; }
 
     }
 }

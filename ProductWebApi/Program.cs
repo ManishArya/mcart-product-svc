@@ -8,11 +8,11 @@ var configuration = builder.Configuration.AddEnvironmentVariables().Build();
 
 builder.Services.AddCors(c => c.AddPolicy("policy", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 
-builder.Services.Configure<CosmosSettings>(configuration.GetSection(nameof(CosmosSettings)));
+builder.Services.Configure<DataAccessClientSettings>(configuration.GetSection(nameof(DataAccessClientSettings)));
 
 // Add services to the container.
 builder.Services.AddTransient<IProductService, ProductService>();
-builder.Services.AddSingleton<CosmosService>();
+builder.Services.AddSingleton<DataAccessClient>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
