@@ -1,11 +1,11 @@
-﻿name: Build and Push to ACR
+﻿name: Deploy on AKS
 on:
   push:
     branches:
-      - "feature"
+      - "master"
 jobs:
   build:
-    name: "Build and Push to ACR"
+    name: "Deploy on AKS"
     runs-on: ubuntu-latest
 
     defaults:
@@ -27,5 +27,27 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ${{ secrets.AZURE_URL}}/amcart:productAPiv1
+          tags: ${{ secrets.AZURE_URL}}/${{secrets.repo}}:productAPiv1
           context: ./ProductWebApi
+      - name: Kubernetes Set Context
+        uses: Azure/k8s-set-context@v3.0
+        with:
+          method: kubeconfig
+          kubeconfig: ${{secrets.K8S_CONFIG}}
+
+      - uses: azure/k8s-bake@v1
+        with:
+          renderEngine: "helm2"
+          helmChart: "./k8s/product-chart"
+          helm-version: "latest"
+          overrides: |
+            imagePath:${{ secrets.AZURE_URL}}/${{secrets.repo}}:productAPiv1
+            container:${{secrets.container}}
+            db:${{secrets.db}}
+            connectionString:${{secrets.connectionString}}
+        id: bake
+      - uses: azure/k8s-deploy@v1
+        with:
+          manifests: ${{ steps.bake.outputs.manifestsBundle }}
+          images: |
+            ${{ secrets.AZURE_URL}}/${{secrets.repo}}:productAPiv1
