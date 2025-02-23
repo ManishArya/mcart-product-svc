@@ -30,8 +30,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("policy");
 
-app.UseHttpsRedirection();
-
 app.UseAuthorization();
 
 app.MapControllers();

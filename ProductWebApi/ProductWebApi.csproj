@@ -10,6 +10,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove=".github\**" />
+    <Compile Remove="k8s\**" />
+    <Content Remove=".github\**" />
+    <Content Remove="k8s\**" />
+    <EmbeddedResource Remove=".github\**" />
+    <EmbeddedResource Remove="k8s\**" />
+    <None Remove=".github\**" />
+    <None Remove="k8s\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.47.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />

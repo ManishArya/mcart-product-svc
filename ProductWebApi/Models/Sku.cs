@@ -2,6 +2,8 @@
 {
     public class Sku
     {
+        public int Id { get; set; }
+
         public int SkuId { get; set; }
 
         public required string Size { get; set; }
