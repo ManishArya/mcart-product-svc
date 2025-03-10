@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
 
-        public int SkuId { get; set; }
+        public string SkuId { get; set; } = string.Empty;
 
         public required string Size { get; set; }
 
