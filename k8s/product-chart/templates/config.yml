@@ -1,8 +1,8 @@
 apiVersion: v1
-kind: Secret
+kind: ConfigMap
 metadata:
   name: productapisettings
-type: Opaque
+  namespace: {{.Values.namespace}}
 data:
   DataAccessClientSettings___ProductContainerName: "{{ .Values.container }}"
   DataAccessClientSettings__DatabaseName: "{{ .Values.db }}"
