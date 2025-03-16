@@ -10,8 +10,8 @@ namespace ProductWebApi.Controllers
         private readonly IProductService _productService = productService;
 
 
-        [HttpGet]
-        public async Task<IActionResult> GetProduct(int productId)
+        [HttpGet("{productId}")]
+        public async Task<IActionResult> GetProduct([FromRoute] int productId)
         {
             var results = await _productService.GetProduct(productId);
             return StatusCode((int)results.Status, results);

@@ -45,6 +45,7 @@ jobs:
             db:${{secrets.db}}
             connectionString:${{secrets.connectionString}}
             namespace:${{secrets.namespace}}
+            allowedHosts:${{secrets.origin}}
         id: bake
       - uses: azure/k8s-deploy@v1
         with:

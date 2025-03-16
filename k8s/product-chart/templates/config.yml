@@ -4,6 +4,7 @@ metadata:
   name: productapisettings
   namespace: {{.Values.namespace}}
 data:
-  DataAccessClientSettings___ProductContainerName: "{{ .Values.container }}"
+  DataAccessClientSettings__ProductContainerName: "{{ .Values.container }}"
   DataAccessClientSettings__DatabaseName: "{{ .Values.db }}"
   DataAccessClientSettings__ConnectionString: "{{ .Values.connectionString }}"
+  AllowedHosts: "{{ .Values.allowedHosts}}"
