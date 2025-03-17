@@ -7,4 +7,3 @@ data:
   DataAccessClientSettings__ProductContainerName: "{{ .Values.container }}"
   DataAccessClientSettings__DatabaseName: "{{ .Values.db }}"
   DataAccessClientSettings__ConnectionString: "{{ .Values.connectionString }}"
-  AllowedHosts: "{{ .Values.allowedHosts}}"
