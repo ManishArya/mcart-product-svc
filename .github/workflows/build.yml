@@ -26,7 +26,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ${{ secrets.ACR_USERNAME}}/${{secrets.repo}}:productAPiv1
+          tags: ${{ secrets.ACR_USERNAME}}/${{secrets.repo}}:productAPiv${{ github.run_attempt }}
           context: ./ProductWebApi
       - name: Kubernetes Set Context
         uses: Azure/k8s-set-context@v3.0
@@ -40,7 +40,7 @@ jobs:
           helmChart: "./k8s/product-chart"
           helm-version: "latest"
           overrides: |
-            imagePath:${{ secrets.ACR_USERNAME}}/${{secrets.repo}}:productAPiv1
+            imagePath:${{ secrets.ACR_USERNAME}}/${{secrets.repo}}:productAPiv${{ github.run_attempt }}
             container:${{secrets.container}}
             db:${{secrets.db}}
             connectionString:${{secrets.connectionString}}
@@ -52,4 +52,4 @@ jobs:
           manifests: ${{ steps.bake.outputs.manifestsBundle }}
           namespace: ${{secrets.namespace}}
           images: |
-            ${{ secrets.ACR_USERNAME}}/${{secrets.repo}}:productAPiv1
+            ${{ secrets.ACR_USERNAME}}/${{secrets.repo}}:productAPiv${{ github.run_attempt }}
