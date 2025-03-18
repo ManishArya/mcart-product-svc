@@ -1,4 +1,5 @@
 using ProductWebApi.Cosmos;
+using ProductWebApi.Models;
 using ProductWebApi.Services;
 using ProductWebApi.Services.Interfaces;
 
@@ -9,6 +10,7 @@ var configuration = builder.Configuration.AddEnvironmentVariables().Build();
 builder.Services.AddCors(c => c.AddPolicy("policy", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 
 builder.Services.Configure<DataAccessClientSettings>(configuration.GetSection(nameof(DataAccessClientSettings)));
+builder.Services.Configure<ImageSettings>(configuration.GetSection(nameof(ImageSettings)));
 
 // Add services to the container.
 builder.Services.AddTransient<IProductService, ProductService>();
