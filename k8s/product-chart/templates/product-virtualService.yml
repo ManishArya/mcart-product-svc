@@ -2,7 +2,7 @@ apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
  name: productserver
- namespace: {{.Values.namespace  | quote}}
+ namespace: amcart
 spec:
  hosts:
    - '*'
@@ -17,24 +17,3 @@ spec:
        host: product-api-svc.amcart.svc.cluster.local
        port:
          number: 8080
-   corsPolicy:
-     allowOrigins:
-     - exact: {{.Values.frontDoorUrl}}
-     - exact: {{.Values.origin}}
-     allowMethods:
-     - POST
-     - GET
-     - OPTIONS
-     allowHeaders:
-     - X-Custom-Header
-     - content-type
-     - authorization
-     - Access-Control-Allow-Origin
-     - Access-Control-Allow-Methods
-     - Access-Control-Allow-Headers
-     - x-azure-ref
-     exposeHeaders:
-     - X-Expose-Header
-     maxAge: 24h
-     allowCredentials: false
- 
