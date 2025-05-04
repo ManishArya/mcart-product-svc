@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: productapisettings
+  namespace: {{.Values.namespace | quote}}
+data:
+  ImageSettings__Url: "{{ .Values.imageServer }}"
+  DataAccessClientSettings__ProductContainerName: "{{ .Values.container }}"
+  DataAccessClientSettings__DatabaseName: "{{ .Values.db }}"
+  DataAccessClientSettings__ConnectionString: "{{ .Values.connectionString }}"
